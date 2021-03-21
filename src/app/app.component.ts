@@ -1,32 +1,60 @@
 import { Component } from '@angular/core';
+import { ImageFile } from './model/image-file';
 
 @Component({
   selector: 'corp-root',
   template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+    <div class="container">
+      <div class="row">
+        <div class="drop-box" corpImgUpload (dropFiles)="onDropFiles($event)">
+          <span class="message">Drop File Images Here</span>
+        </div>
+      </div>
+      <div class="row">
+        <img *ngFor="let file of files" [src]="file.url" />
+      </div>
     </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    <router-outlet></router-outlet>
   `,
-  styles: []
+  styles: [
+    `
+      .container {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .drop-box {
+        min-height: 300px;
+        min-width: 300px;
+        display: table;
+        background-color: #c6e4f1;
+        border: solid 1px #75c5e7;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .message {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        color: #686868;
+      }
+
+      img {
+        width: 200px;
+        height: 200px;
+      }
+    `,
+  ],
 })
 export class AppComponent {
-  title = 'angular-upload-images-demo';
+  files: ImageFile[] = [];
+
+  onDropFiles(files: ImageFile[]): void {
+    this.files = [...this.files, ...files];
+  }
 }
