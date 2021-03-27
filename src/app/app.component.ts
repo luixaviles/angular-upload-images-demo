@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { CloudinaryAsset } from './model/cloudinary-asset';
 import { ImageFile } from './model/image-file';
+import { ImageUploaderService } from './services/image-uploader.service';
 
 @Component({
   selector: 'corp-root',
@@ -11,7 +14,13 @@ import { ImageFile } from './model/image-file';
         </div>
       </div>
       <div class="row">
-        <img *ngFor="let file of files" [src]="file.url" />
+        <a
+          *ngFor="let file of imageFiles$ | async"
+          [href]="file.url"
+          target="_blank"
+        >
+          <img [src]="file.url" />
+        </a>
       </div>
     </div>
   `,
@@ -52,9 +61,11 @@ import { ImageFile } from './model/image-file';
   ],
 })
 export class AppComponent {
-  files: ImageFile[] = [];
+  imageFiles$: Observable<CloudinaryAsset[]>;
 
-  onDropFiles(files: ImageFile[]): void {
-    this.files = [...this.files, ...files];
+  constructor(private imageUploaderService: ImageUploaderService) {}
+
+  onDropFiles(imageFiles: ImageFile[]): void {
+    this.imageFiles$ = this.imageUploaderService.uploadImages(imageFiles);
   }
 }
